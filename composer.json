@@ -1,0 +1,18 @@
+{
+    "name": "elzobrito/olivia-app",
+    "description": "HttpService Olivia",
+    "authors": [
+        {
+            "name": "elzobrito",
+            "email": "elzo.filho@etec.sp.gov.br"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "HttpServiceSrc\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.2.5|^8.0"
+    }
+}
