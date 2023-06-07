@@ -1,6 +1,5 @@
 <?php
 
-
 namespace HttpService;
 
 use HttpServiceSrc\HttpClient\ServicoHttpClient;
@@ -65,10 +64,12 @@ use HttpServiceSrc\Exception\HttpClientException;
 abstract class AbstractHttpClient implements HttpClientInterface
 {
     protected $defaultHeaders;
-
-    public function __construct($handler = null)
+    protected $protocol_version;
+    
+    public function __construct($handler = null,$protocol_version)
     {
         $this->defaultHeaders = $handler ?? array('Content-Type: application/x-www-form-urlencoded');
+        $this->protocol_version = $protocol_version;
     }
 
     abstract public function get($endpoint, $params = null);
@@ -80,7 +81,8 @@ abstract class AbstractHttpClient implements HttpClientInterface
             array(
                 'method'  => $method,
                 'header' => $this->defaultHeaders,
-                'content' => $parametros ?? ''
+                'content' => $parametros ?? '',
+                'protocol_version' => $this->protocol_version,
             )
         );
     }
@@ -110,6 +112,7 @@ abstract class AbstractHttpClient implements HttpClientInterface
         return (int) $matches[1];
     }
 }
+
 namespace HttpServiceSrc\HttpClient;
 interface HttpClientInterface
 {
@@ -124,9 +127,9 @@ class ServicoHttpClient extends AbstractHttpClient
 {
     private $baseUrl;
 
-    public function __construct($baseUrl,$handler = null)
+    public function __construct($baseUrl, $handler = null, $protocol_version = null)
     {
-        parent::__construct($handler);
+        parent::__construct($handler, $protocol_version);
         $this->baseUrl = $baseUrl;
     }
 
@@ -145,12 +148,4 @@ class ServicoHttpClient extends AbstractHttpClient
 
         return $this->handleResponse($response, $context);
     }
-
-}
-namespace HttpServiceSrc\Exception;
-
-use Exception;
-
-class HttpClientException extends Exception
-{
 }

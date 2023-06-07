@@ -2,6 +2,7 @@
 
 namespace HttpServiceSrc\HttpClient;
 
+use HttpServiceSrc\Exception\HttpClientException;
 use InvalidArgumentException;
 
 class ServicoHttpClient extends AbstractHttpClient
@@ -27,6 +28,10 @@ class ServicoHttpClient extends AbstractHttpClient
         $context = stream_context_create($options);
         $response = file_get_contents($url, false, $context);
 
-        return $this->handleResponse($response, $context);
+        try {
+            return $this->handleResponse($response, $context);
+        } catch (HttpClientException $e) {
+            print_r($e);
+        }
     }
 }

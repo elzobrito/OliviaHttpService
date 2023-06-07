@@ -15,7 +15,7 @@ class ServicoService
 
     public function getSearchWithSlash($query, $params = null)
     {
-        $uri = '/' .$query . '/' . $params;
+        $uri = '/' . urlencode($query) . '/' . urlencode($params);
 
         return $this->httpClient->get($uri);
     }
