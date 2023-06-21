@@ -3,7 +3,6 @@
 namespace HttpServiceSrc\HttpClient;
 
 use HttpServiceSrc\Exception\HttpClientException;
-use InvalidArgumentException;
 
 class ServicoHttpClient extends AbstractHttpClient
 {
@@ -15,18 +14,12 @@ class ServicoHttpClient extends AbstractHttpClient
         $this->baseUrl = $baseUrl;
     }
 
-    public function get($endpoint, $params = null)
+    public function get($params = null)
     {
-        $url = $this->baseUrl . $endpoint;
-
-        // Validação da URL
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new InvalidArgumentException("Invalid URL: $url");
-        }
-
-        $options = $this->getDefaultContextOptions('GET');
+        $this->baseUrl .= $params;
+        $options = $this->getContextOptions();
         $context = stream_context_create($options);
-        $response = file_get_contents($url, false, $context);
+        $response = file_get_contents($this->baseUrl, false, $context);
 
         try {
             return $this->handleResponse($response, $context);

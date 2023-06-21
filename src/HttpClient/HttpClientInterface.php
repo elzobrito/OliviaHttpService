@@ -2,5 +2,5 @@
 namespace HttpServiceSrc\HttpClient;
 interface HttpClientInterface
 {
-    public function get($endpoint, $params = null);
+    public function get($params = null);
 }

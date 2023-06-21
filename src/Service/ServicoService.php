@@ -13,23 +13,26 @@ class ServicoService
         $this->httpClient = $httpClient;
     }
 
-    public function getSearchWithSlash($query, $params = null)
+    public function getSearchWithSlash($params = null)
     {
-        $uri = '/' . urlencode($query) . '/' . urlencode($params);
-
-        return $this->httpClient->get($uri);
-    }
-
-    public function getSearch($query, $params = null)
-    {
-        $endpoint = '/' . $query;
-
-        $queryParams = [];
-
-        if ($params) {
-            $queryParams = array_merge($queryParams, $params);
+        $sanitizedParams = '';
+        foreach ($params as $key => $value) {
+            $sanitizedValue = strip_tags($value);
+            $sanitizedValue = htmlspecialchars($sanitizedValue, ENT_QUOTES);
+            $sanitizedParams .= '/' . $key . '/' . $sanitizedValue;
         }
 
-        return $this->httpClient->get($endpoint, $queryParams);
+        return $this->httpClient->get($sanitizedParams);
+    }
+
+    public function getSearch($params = null)
+    {
+        $sanitizedParams = array();
+        foreach ($params as $key => $value) {
+            $sanitizedValue = strip_tags($value);
+            $sanitizedValue = htmlspecialchars($sanitizedValue, ENT_QUOTES);
+            $sanitizedParams[$key] = $sanitizedValue;
+        }
+        return $this->httpClient->get('?' . http_build_query($sanitizedParams));
     }
 }

@@ -8,27 +8,27 @@ abstract class AbstractHttpClient implements HttpClientInterface
 {
     protected $defaultHeaders;
     protected $protocol_version;
-    
-    public function __construct($handler = null,$protocol_version)
+
+    public function __construct($handler = null, $protocol_version)
     {
         $this->defaultHeaders = $handler ?? array('Content-Type: application/x-www-form-urlencoded');
         $this->protocol_version = $protocol_version;
     }
 
-    abstract public function get($endpoint, $params = null);
+    abstract public function get($params = null);
 
-    protected function getDefaultContextOptions($method, $parametros = null)
+    protected function getContextOptions()
     {
         return array(
             'http' =>
             array(
-                'method'  => $method,
+                'method'  => 'GET',
                 'header' => $this->defaultHeaders,
-                'content' => $parametros ?? '',
                 'protocol_version' => $this->protocol_version,
             )
         );
     }
+
 
     protected function handleResponse($response, $context)
     {
